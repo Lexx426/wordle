@@ -1,7 +1,7 @@
 import React, {useContext} from 'react'
 import { AppContext } from '../App';
 
-function Key( {keyValue, bigKey}) {
+function Key( {keyValue, bigKey, disabled}) {
 
   const { onDelete, onSelectLetter, onEnter } = useContext(AppContext);
 
@@ -16,7 +16,7 @@ function Key( {keyValue, bigKey}) {
   }};
 
   return (
-    <div className='key'id={bigKey && "big"} onClick={selectLetter}> {keyValue} </div>
+    <div className='key'id={bigKey ? "big": disabled && "disabled"} onClick={selectLetter}> {keyValue} </div>
   )
 }
 
