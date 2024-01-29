@@ -1,8 +1,8 @@
 import Board from './components/Board';
 import Keyboard from './components/Keyboard';
 import './App.css';
-import { boardDefault } from './components/Words'; 
-import { createContext, useState } from 'react';
+import { boardDefault, generateWordSet } from './Words'; 
+import { createContext, useEffect, useState } from 'react';
 
 export const AppContext = createContext();
 
@@ -10,8 +10,15 @@ function App() {
   const [board, setBoard] = useState(boardDefault);
 
   const [currentAttempt, setCurrentAttempt] = useState({attemptValue: 0, letterPosition: 0});
+  const [wordSet,setWordSet] = useState(new Set());
+  const [disabledLetters, setDisabledLetters] = useState([]);
 
-  const correctWord = "RIGHT"
+  const correctWord = "RIGHT";
+  useEffect(() =>{
+    generateWordSet().then((words) =>{
+      setWordSet(words.wordSet);
+    });
+  }, []);
 
   const onSelectLetter = (keyValue) => {
     if (currentAttempt.letterPosition > 4) return;
@@ -32,13 +39,27 @@ function App() {
 
   const onEnter = () => {
     if (currentAttempt.letterPosition !== 5) return;
+
+    let currentWord = "";
+    for ( let i = 0; i < 5; i++){
+      currentWord += board[currentAttempt.attemptValue][i].toLowerCase();
+    }
+    if (wordSet.has(currentWord.toLowerCase())){
       setCurrentAttempt({attemptValue: currentAttempt.attemptValue + 1, letterPosition: 0})
+    } else {
+      alert("Word not found.");
+    }
+    if ( currentWord.toLowerCase() === correctWord.toLowerCase()){
+      alert("You guessed the right word!");
+      console.log("yes")
+    }
   }
+      
 
   return (
     <div className="App">
       <nav> <h1> Wordle </h1></nav>
-      <AppContext.Provider value={{board, setBoard, currentAttempt, setCurrentAttempt, onDelete, onEnter, onSelectLetter, correctWord}}>
+      <AppContext.Provider value={{board, setBoard, currentAttempt, setCurrentAttempt, onDelete, onEnter, onSelectLetter, correctWord, disabledLetters, setDisabledLetters}}>
         <div className='game'>
           <Board/>
           <Keyboard/>
