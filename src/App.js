@@ -3,6 +3,7 @@ import Keyboard from './components/Keyboard';
 import './App.css';
 import { boardDefault, generateWordSet } from './Words'; 
 import { createContext, useEffect, useState } from 'react';
+import GameOver from './components/GameOver';
 
 export const AppContext = createContext();
 
@@ -12,11 +13,14 @@ function App() {
   const [currentAttempt, setCurrentAttempt] = useState({attemptValue: 0, letterPosition: 0});
   const [wordSet,setWordSet] = useState(new Set());
   const [disabledLetters, setDisabledLetters] = useState([]);
+  const [gameOver, setGameOver] =useState({gameOver: false, guessedWord: false});
+  const [correctWord, setCorrectWord] = useState("")
 
-  const correctWord = "RIGHT";
+
   useEffect(() =>{
     generateWordSet().then((words) =>{
       setWordSet(words.wordSet);
+      setCorrectWord(words.todaysWord)
     });
   }, []);
 
@@ -50,8 +54,12 @@ function App() {
       alert("Word not found.");
     }
     if ( currentWord.toLowerCase() === correctWord.toLowerCase()){
-      alert("You guessed the right word!");
-      console.log("yes")
+      setGameOver ({gameOver: true, guessedWord: true})
+      return;
+    }
+    if (currentAttempt.attemptValue === 5){
+      setGameOver( {gameOver: true, guessedWord: false})
+      return;
     }
   }
       
@@ -59,10 +67,10 @@ function App() {
   return (
     <div className="App">
       <nav> <h1> Wordle </h1></nav>
-      <AppContext.Provider value={{board, setBoard, currentAttempt, setCurrentAttempt, onDelete, onEnter, onSelectLetter, correctWord, disabledLetters, setDisabledLetters}}>
+      <AppContext.Provider value={{board, setBoard, currentAttempt, setCurrentAttempt, onDelete, onEnter, onSelectLetter, correctWord, disabledLetters, setDisabledLetters, gameOver,setGameOver}}>
         <div className='game'>
           <Board/>
-          <Keyboard/>
+          { gameOver.gameOver ? <GameOver /> : <Keyboard/>}
         </div>
       </AppContext.Provider>
     </div>
