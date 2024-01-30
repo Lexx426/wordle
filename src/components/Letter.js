@@ -13,7 +13,7 @@ function Letter({letterPosition, attemptValue}) {
         if (letter !== "" && !correct && !almost){
             setDisabledLetters((prev) => [...prev, letter]);
         }
-    }, [currentAttempt.attemptValuecorrect, almost, letter, setDisabledLetters]);
+    }, [currentAttempt.attemptValuecorrect, almost, letter, correct, setDisabledLetters]);
 
     return (
         <div className='letter' id={letterState}> {letter} </div>
