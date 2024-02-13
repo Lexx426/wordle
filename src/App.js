@@ -44,8 +44,8 @@ function App() {
   const onEnter = () => {
     if (currentAttempt.letterPosition !== 5) return;
 
-    console.log(wordSet + "apapapapapa")
-    console.log(todaysWord + " asasasasasas")
+    // console.log(wordSet + "apapapapapa")
+    // console.log(todaysWord + " asasasasasas")
     let currentWord = "";
     for ( let i = 0; i < 5; i++){
       currentWord += board[currentAttempt.attemptValue][i].toLowerCase();
